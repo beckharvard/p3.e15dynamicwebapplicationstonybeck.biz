@@ -86,9 +86,14 @@ $(function() {
 	$('.container').click(function () {
 	
 		var container_clicked = $(this).attr('id');
-		picture_clicked = $("#" + container_clicked ).children().attr('id');
+		//picture_clicked = $("#" + container_clicked ).children().attr('id');
 		
-		console.log("the id of the container is " + picture_clicked);
+		//picture_clicked = $(this).next().find("img").attr('src');
+		
+		var pictures = $(this).find(".pictures").attr("id");
+		picture_clicked = $(pictures).attr('src');
+		
+		console.log("the id of the thing is " + pictures);
 	});
 	
 	$('.shield').click(function () {
