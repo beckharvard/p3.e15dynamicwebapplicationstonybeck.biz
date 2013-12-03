@@ -90,10 +90,33 @@ $(function() {
 		
 		//picture_clicked = $(this).next().find("img").attr('src');
 		
+		// probably don't even need this anymore...
 		var pictures = $(this).find(".pictures").attr("id");
-		picture_clicked = $(pictures).attr('src');
+		
+// this might be an object so I might have difficulty comparing on this...
+		var last_picture_clicked = $(this).find(".pictures").find("img").attr("src");
+		
+		if (picture_clicked === "") {
+		
+			picture_clicked = last_picture_clicked;
+			console.log("we set the picture clicked variable to " + picture_clicked);
+		}
+		else {
+			
+			if ( picture_clicked === last_picture_clicked) {
+				alert("they matched!");
+			}
+			else {
+				console.log("they didn't match" + picture_clicked + "  " +  last_picture_clicked);
+			}
+		
+		}
 		
 		console.log("the id of the thing is " + pictures);
+		console.log("the image URL is " + picture_clicked);
+
+		
+
 	});
 	
 	$('.shield').click(function () {
@@ -119,7 +142,7 @@ $(function() {
 		
 		if (picture_clicked !== "") {
 		
-			picture_clicked = "foo!";
+			//picture_clicked = "foo!";
 		} // restore
 		else {
 			alert("once we click this it should come back");
