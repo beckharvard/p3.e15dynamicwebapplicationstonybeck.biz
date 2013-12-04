@@ -1,11 +1,95 @@
 $(function() {
 
 	var clicks = 0;
-	
 	var picture_clicked = "";
+	var first_shield = "";	
+	var first_id = "";
+	var second_id = "";
+	var match = false;
+	 
+    $(window).load(function () {
+
+		// alert("Window Loaded!");
+		
+	});
 	
-	var first_shield = "";
+	$('.container').click(function () {
+		// get the id of the shield that was clicked
+		var shield_clicked = $(this).find('.shield').attr('id');
+		//get the id of the div containing the picture
+		var pictures = $(this).find(".pictures").attr("id");
+		// display the picture by setting the shield display to none
+		$("#" + shield_clicked).css( "display", "none" );	
+		
+       // for comparing 
+		var last_picture_clicked = $(this).find(".pictures").find("img").attr("src");
+		
+		if (picture_clicked === "") {
+		
+			picture_clicked = last_picture_clicked;
+			
+		//	console.log("we set the picture clicked variable to " + picture_clicked);
+			
+			first_id = pictures;
+			
+			first_shield = shield_clicked;
+			
+			console.log("first_id is :" + first_id);
+			
+			match = false;
+		}
+		else {
+			
+			if ( picture_clicked === last_picture_clicked) {
+				alert("they matched!");
+				
+				// reset the variable!
+				picture_clicked = "";
+				
+				match = true;
+				$("#" + first_shield).css( "display", "none" );
+				$("#" + shield_clicked).css( "display", "none" );	
+				
+			}
+			else if (picture_clicked != "") {
+					
+					picture_clicked = "";
+					console.log("we reset the picture clicked to empty, coz it's the second.");
+				//if match variable is set to false set the shield back
+					if (!match) {
+						match = false;
+						setInterval(function(){$("#" + shield_clicked).css( "display", "inline" )},1500);	
+						setInterval(function(){$("#" + first_shield).css( "display", "inline" )},1000);	
+						//here we need the id of the last shield
+						
+						
+						picture_clicked = "";
+					}
+					else {
+					
+					//	$("#" + shield_clicked).css( "display", "none" );	
+					//	$("#" + first_shield).css( "display", "none" );
+					//	setInterval(function(){$("#" + shield_clicked).delay(1500).css( "display", "inline" )},1000);
+						
+					}
+				
+			}	
+		}
+
+	});
 	
+	$('.shield').click(function () {
+
+
+			clicks++;
+
+		console.log("clicks is " + clicks);
+		var num = clicks / 2;
+		console.log("num is " + num);
+		var score = ~~num;	
+		$('#score').replaceWith("<strong>" + score + "</strong>");
+	});
+
 	$(document).ready(function(){
     
 		//alert("Document Ready!");	
@@ -57,9 +141,8 @@ $(function() {
 		// don't do anything with it if it's already in the pairs array twice
 			}
 			else {
-		//add the it to the pairs array
+		//add the it to the pairs array & increment
 				pairs[i] = found;
-		// increment i
 				i++;
 			}
 		// the pairs array is completed when we move outside this array
@@ -76,81 +159,5 @@ $(function() {
 		 	i++;
 		 }			 
     });
-    
-    $(window).load(function () {
-
-		// alert("Window Loaded!");
-		
-	});
-	
-	$('.container').click(function () {
-	
-		var container_clicked = $(this).attr('id');
-		//picture_clicked = $("#" + container_clicked ).children().attr('id');
-		
-		//picture_clicked = $(this).next().find("img").attr('src');
-		
-		// probably don't even need this anymore...
-		var pictures = $(this).find(".pictures").attr("id");
-		
-// this might be an object so I might have difficulty comparing on this...
-		var last_picture_clicked = $(this).find(".pictures").find("img").attr("src");
-		
-		if (picture_clicked === "") {
-		
-			picture_clicked = last_picture_clicked;
-			console.log("we set the picture clicked variable to " + picture_clicked);
-		}
-		else {
-			
-			if ( picture_clicked === last_picture_clicked) {
-				alert("they matched!");
-			}
-			else {
-				console.log("they didn't match" + picture_clicked + "  " +  last_picture_clicked);
-			}
-		
-		}
-		
-		console.log("the id of the thing is " + pictures);
-		console.log("the image URL is " + picture_clicked);
-
-		
-
-	});
-	
-	$('.shield').click(function () {
-
-		//$(this).detach();
-		// move the shield back on the z-index
-		//	$(this).css( "z-index", "0" );
-		// change the display to none
-			$(this).css( "display", "none" );	
-		// increment the clicks variable	
-			clicks++;
-			
-	//		var parent_container = this.prev();
-			
-	//		console.log("the parent container is" + parent_container);
-			
-			//.find()
-			
-	//		console.log("Clicks is now " + clicks);
-	
-		// logic to check for a match
-	//	picture_clicked = $();
-		
-		if (picture_clicked !== "") {
-		
-			//picture_clicked = "foo!";
-		} // restore
-		else {
-			alert("once we click this it should come back");
-	//		$(this).css( "display", "inline" );	
-		}
-			
-	});
-	
-	// we're going to need setTimeout( what_ever_happensnext, 500); or setInterval
 
 });
