@@ -1,91 +1,182 @@
 $(function() {
 
 	var clicks = 0;
-	var picture_clicked = "";
-	var first_shield = "";	
+	var prev_picture_clicked = "";
+	var first_shield = ""; 	
+	var second_shield = "";
 	var first_id = "";
 	var second_id = "";
-	var match = false;
-	 
-    $(window).load(function () {
-
-		// alert("Window Loaded!");
-		
-	});
+	var match = false;	
 	
+	var solvedpairs = new Array(); 
+
 	$('.container').click(function () {
 		// get the id of the shield that was clicked
 		var shield_clicked = $(this).find('.shield').attr('id');
 		//get the id of the div containing the picture
-		var pictures = $(this).find(".pictures").attr("id");
+		var pictures_id = $(this).find(".pictures").attr("id");
 		// display the picture by setting the shield display to none
-		$("#" + shield_clicked).css( "display", "none" );	
+		$("#" + shield_clicked).css( "display", "none" );
 		
-       // for comparing 
+		console.log("shield clicked is " + shield_clicked);
+		console.log("picture id is " + pictures_id);
+		
+       // get the image for comparing 
 		var last_picture_clicked = $(this).find(".pictures").find("img").attr("src");
 		
-		if (picture_clicked === "") {
+		console.log("A");  
+		consoleVariables();
 		
-			picture_clicked = last_picture_clicked;
-			
-		//	console.log("we set the picture clicked variable to " + picture_clicked);
-			
-			first_id = pictures;
-			
-			first_shield = shield_clicked;
-			
-			console.log("first_id is :" + first_id);
-			
+		// first of a new round or first of a pair
+		if (prev_picture_clicked == "") {
+		
+			prev_picture_clicked = last_picture_clicked;			
+			first_id = pictures_id;		
+			first_shield = shield_clicked;			
 			match = false;
-		}
-		else {
 			
-			if ( picture_clicked === last_picture_clicked) {
-				alert("they matched!");
-				
-				// reset the variable!
-				picture_clicked = "";
-				
-				match = true;
-				$("#" + first_shield).css( "display", "none" );
-				$("#" + shield_clicked).css( "display", "none" );	
-				
-			}
-			else if (picture_clicked != "") {
-					
-					picture_clicked = "";
-					console.log("we reset the picture clicked to empty, coz it's the second.");
-				//if match variable is set to false set the shield back
-					if (!match) {
-						match = false;
-						setInterval(function(){$("#" + shield_clicked).css( "display", "inline" )},1500);	
-						setInterval(function(){$("#" + first_shield).css( "display", "inline" )},1000);	
-						//here we need the id of the last shield
-						
-						
-						picture_clicked = "";
-					}
-					else {
-					
-					//	$("#" + shield_clicked).css( "display", "none" );	
-					//	$("#" + first_shield).css( "display", "none" );
-					//	setInterval(function(){$("#" + shield_clicked).delay(1500).css( "display", "inline" )},1000);
-						
-					}
-				
-			}	
+			console.log("B");  
+			consoleVariables();
+			console.log("returning");
+			return;
 		}
+	
+		if (prev_picture_clicked != "" && second_id == "") {
+				console.log("C");  
+
+				second_id = pictures_id;
+				second_shield = shield_clicked;
+
+				console.log("added second_id and second shield");  
+				consoleVariables();
+				
+				testformatch (last_picture_clicked);			
+		}	
 
 	});
+	
+	function testformatch (last_picture_clicked) {
+		//if match variable is set to false set the shield back in place
+		
+				console.log( "comparing: " + prev_picture_clicked + " " + first_shield  + " " + last_picture_clicked  +" "  + second_shield);
+		
+				if ( prev_picture_clicked === last_picture_clicked && prev_picture_clicked !== "" && last_picture_clicked !== "" && first_shield === second_shield){
+				
+					consoleVariables();
+					
+					(
+						function (first_shield, second_shield) {
+						setTimeout(function(){$("#" + first_shield).css( "display", "inline" )},1500);	
+						setTimeout(function(){$("#" + second_shield).css( "display", "inline" )},1500);	
+						}
+					)
+					(first_shield, second_shield)
+					
+					alert(" dude, you just clicked that...now I have work to do clean that up.");
+					// reset the picture clicked variable 
+					resetVariables ();
+					consoleVariables();
+					
+				}
+				
+				else if ( prev_picture_clicked === last_picture_clicked && prev_picture_clicked !== "" && last_picture_clicked !== "") {
+					alert("they matched!");
+			
+					console.log("Match");  
+					consoleVariables();
+			
+					match = true;
+					$("#" + first_shield).css( "display", "none" );
+					$("#" + second_shield).css( "display", "none" );	
+			
+			
+					solvedpairs.push( first_shield + " " + second_shield);
+					console.log(solvedpairs);
+			
+					//$("#" + first_shield).remove();
+					//$("#" + second_shield).remove();
+			
+					// reset the variables!
+					resetVariables ();
+					console.log("variables reset because we have a match." );
+					
+						if (solvedpairs.length == 10 ) {
+						 alert("Solved!");
+						}
+				}
+				if (!match) {
+					console.log("Evaluation NO Match", window, first_shield);  
+					match = false;
+					
+					// Asynchronous behavior needed: create a function with a new scope that holds on to these variable 
+					// long enough to complete the setTimeout function. 
+					(
+						function(first_shield, second_shield) {
+							setTimeout(function(){$("#" + first_shield).css( "display", "inline" )},1500);	
+						//	alert("first shield is " + first_shield);
+							setTimeout(function(){$("#" + second_shield).css( "display", "inline" )},1500);	
+						}
+					)
+					(first_shield, second_shield)
+					
+
+					// reset the picture clicked variable 
+					
+					
+					console.log("variables will be reset because DON'T we have a match." );
+					resetVariables();
+					consoleVariables();
+				}
+				
+
+	
+	};
+	
+	// need a function to disable clicking for the matched items once each has been revealed
+	
+	function resetVariables () {
+	
+				console.log("Shown before we clear those variables...");
+				consoleVariables();
+	
+				prev_picture_clicked = "";
+				first_shield = "";
+				second_shield = ""; 	
+				first_id = "";
+				second_id = "";
+				match = false;
+
+				console.log("variables are now...prev picture clicked "		
+											+ prev_picture_clicked + " " +
+					"first shield " 		+ first_shield + " " +
+					"second shield " 		+ second_shield + " " +
+					"first id "				+ first_id + " " +
+					"second id "			+ second_id + " " +
+					"match " 				+  match);
+	
+	};
+	
+	function consoleVariables() {
+	
+
+		console.log("The variables are now....clicks "+ clicks + " " +
+				"prev_picture clicked "		+ prev_picture_clicked + " " +
+				"first shield " 			+ first_shield + " " +
+				"second shield " 			+ second_shield + " " +
+				"first id "					+ first_id + " " +
+				"second id "				+ second_id + " " +
+				"match " 					+  match);
+	
+	};
 	
 	$('.shield').click(function () {
 
 
 			clicks++;
 
-		console.log("clicks is " + clicks);
+//		console.log("clicks is " + clicks);
 		var num = clicks / 2;
-		console.log("num is " + num);
+//		console.log("num is " + num);
 		var score = ~~num;	
 		$('#score').replaceWith("<strong>" + score + "</strong>");
 	});
@@ -159,5 +250,12 @@ $(function() {
 		 	i++;
 		 }			 
     });
+    
+    $(window).load(function () {
+
+		// alert("Window Loaded!");	
+		
+	});
+	
 
 });
