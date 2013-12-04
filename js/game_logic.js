@@ -7,6 +7,7 @@ $(function() {
 	var first_id = "";
 	var second_id = "";
 	var match = false;	
+	var speed = 1000;
 	
 	var solvedpairs = new Array(); 
 
@@ -66,8 +67,8 @@ $(function() {
 					
 					(
 						function (first_shield, second_shield) {
-						setTimeout(function(){$("#" + first_shield).css( "display", "inline" )},1500);	
-						setTimeout(function(){$("#" + second_shield).css( "display", "inline" )},1500);	
+						setTimeout(function(){$("#" + first_shield).css( "display", "inline" )},speed);	
+						setTimeout(function(){$("#" + second_shield).css( "display", "inline" )},speed);	
 						}
 					)
 					(first_shield, second_shield)
@@ -80,7 +81,7 @@ $(function() {
 				}
 				
 				else if ( prev_picture_clicked === last_picture_clicked && prev_picture_clicked !== "" && last_picture_clicked !== "") {
-					alert("they matched!");
+					alert("A match!");
 			
 					console.log("Match");  
 					consoleVariables();
@@ -112,9 +113,9 @@ $(function() {
 					// long enough to complete the setTimeout function. 
 					(
 						function(first_shield, second_shield) {
-							setTimeout(function(){$("#" + first_shield).css( "display", "inline" )},1500);	
+							setTimeout(function(){$("#" + first_shield).css( "display", "inline" )},speed);	
 						//	alert("first shield is " + first_shield);
-							setTimeout(function(){$("#" + second_shield).css( "display", "inline" )},1500);	
+							setTimeout(function(){$("#" + second_shield).css( "display", "inline" )},speed);	
 						}
 					)
 					(first_shield, second_shield)
@@ -171,14 +172,22 @@ $(function() {
 	
 	$('.shield').click(function () {
 
-
-			clicks++;
-
-//		console.log("clicks is " + clicks);
+		clicks++;
 		var num = clicks / 2;
-//		console.log("num is " + num);
-		var score = ~~num;	
-		$('#score').replaceWith("<strong>" + score + "</strong>");
+		var tries = ~~num;	
+		$('#tries').replaceWith("<strong id=\"tries\" >" + tries + "</strong>");
+		
+		
+		if (solvedpairs.length > 0) {
+			var matches = solvedpairs.length + 1;
+			$('#matches').replaceWith("<strong id=\"matches\" >" + matches + "</strong>");
+		}
+	});
+	
+	$("#speed").change(function() {
+	
+		speed = $(this).val();
+	
 	});
 
 	$(document).ready(function(){
