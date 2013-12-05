@@ -126,7 +126,7 @@ $(function() {
 					
 					//console.log("variables will be reset because DON'T we have a match." );
 					resetVariables();
-					//	consoleVariables();
+
 				}
 				
 
