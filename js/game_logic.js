@@ -130,6 +130,7 @@ $(function() {
 				}
 			
 		//test my ability to push to a repo with a changed name...
+		//i think it worked...
 	};
 	
 	// need a function to disable clicking for the matched items once each has been revealed
