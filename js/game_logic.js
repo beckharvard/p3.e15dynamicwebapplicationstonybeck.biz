@@ -41,7 +41,6 @@ $(function() {
 			
 		//	console.log("B");  
 		//	consoleVariables();
-		//	console.log("returning");
 			return;
 		}
 	
