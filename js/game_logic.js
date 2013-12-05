@@ -129,7 +129,7 @@ $(function() {
 
 				}
 			
-		//I think it worked.
+		//Pretty sure
 	};
 	
 	// need a function to disable clicking for the matched items once each has been revealed
