@@ -9,12 +9,32 @@ $(function() {
 	var match = false;	
 	var speed = 1000;
 	var sentinel = false;
+	var puzzleTime = '0.0';
 	
 	var solvedpairs = new Array(); 
+	
+	var start = new Date().getTime(),
+	elapsed = '0.0';
+
+	setInterval(function() {
+		
+		if (sentinel) {
+		var time = new Date().getTime() - start;
+
+		elapsed = Math.floor(time / 100) / 10;
+		if(Math.round(elapsed) == elapsed) { elapsed += '.0'; }
+
+		puzzleTime = elapsed;
+		
+		//console.log(" YyyyyyyyyYYYYYYYYYYyyyyyYYYYYYYyyyyyyy" + puzzleTime);
+		$('#ptime').replaceWith("<strong id=\"ptime\" >" + puzzleTime + "</strong>");
+		}
+	}, 100);
+	
 
 	$('.container').click(function () {
 		// increment the click counter
-		updateClicks() 
+		updateClicks();
 		// get the id of the shield that was clicked
 		var shield_clicked = $(this).find('.shield').attr('id');
 		//get the id of the div containing the picture
@@ -84,9 +104,6 @@ $(function() {
 				else if ( prev_picture_clicked === last_picture_clicked && prev_picture_clicked !== "" && last_picture_clicked !== "") {
 					alert("A match!");
 			
-			//		console.log("Match");  
-			//		consoleVariables();
-			
 					match = true;
 					$("#" + first_shield).css( "display", "none" );
 					$("#" + second_shield).css( "display", "none" );	
@@ -100,6 +117,7 @@ $(function() {
 				//	console.log("variables reset because we have a match." );
 					
 						if (solvedpairs.length == 10 ) {
+						 sentinel = false;
 						 alert("Solved!");
 						}
 				}
@@ -118,16 +136,9 @@ $(function() {
 					)
 					(first_shield, second_shield)
 					
-
-					// reset the picture clicked variable 
-					
-					
 					//console.log("variables will be reset because DON'T we have a match." );
 					resetVariables();
-
 				}
-			
-		//Pretty sure
 	};
 	
 	// need a function to disable clicking for the matched items once each has been revealed
@@ -164,7 +175,7 @@ $(function() {
 				"first id "					+ first_id + " " +
 				"second id "				+ second_id + " " +
 				"match " 					+  match);
-	
+	//	console.log( "the length of the solved pairs array is: " + solvedpairs.length);
 	};
 	
 	function updateClicks() {
@@ -173,6 +184,10 @@ $(function() {
 		var num = clicks / 2;
 		var tries = ~~num;	
 		$('#tries').replaceWith("<strong id=\"tries\" >" + tries + "</strong>");
+		
+		if (clicks == 1 ) {
+			sentinel = true;			
+		}
 	};
 	
 	function updateScore() {
@@ -181,7 +196,7 @@ $(function() {
 		if (solvedpairs.length > 0) {
 			var matches = solvedpairs.length;
 			$('#matches').replaceWith("<strong id=\"matches\" >" + matches + "</strong>");
-			console.log( "the length of the solved pairs array is: " + solvedpairs.length);
+		
 		}
 		else {
 

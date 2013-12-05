@@ -2,7 +2,7 @@
 <html>
 <head>
 
-	<title>P4</title>
+	<title></title>
 	
 	<link rel="stylesheet" href=" css/style.css" type="text/css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -15,20 +15,26 @@
 <body>
 
 	<h1>P4 - Memory</h1>
-	<p>Click on any square to start the game. then click a second square to se if you have found a match.
+	<p>Click on any square to start the game. Then, click a second square to see if you have found a match.
 	Matching two pictures leaves them displayed. The game ends when all squares are revealed.
-	Once you get good, try it faster and go for a faster time</p> 
-	<p> Tries: <strong id="tries">0</strong> </p>
-	<p> Matches: <strong id="matches">0</strong> </p>
+	Once you get good, try it faster and go for a better time</p> 
+	<br>
+	<div id="right_top">
+	<h4 class="ptime"> Time Elapsed: <strong id="ptime">0</strong> </h4>
+	</div>
+	<div id ="left_top">
+	<h4> Tries: <strong id="tries">0</strong> </h4>
+	<h4> Matches: <strong id="matches">0</strong> </h4>
 	<fieldset>
-      <legend>Settings!</legend>
-		<select id="speed">
+		<label for="speed">Speed:</label>
+		<select id="speed" name="speed">
 		  <option value="1000">Normal</option>
 		  <option value="500">Faster</option>
 		  <option value="250">Very Fast</option>
 		</select>
 	</fieldset>
-	
+	</div>
+
 <div id='wrapper'>
 	<div id="c1" class="container">
 		<div id="shield1" class="shield"><img src="images/shield.jpg" alt=""/></div>

@@ -41,16 +41,34 @@ h1, h2, footer{
 	margin:		25px;
 }
 
-p, select, fieldset  {
+p, h4, select, fieldset  {
 
 	margin-left:	50px;
+}
+
+p {
 	max-width:		80%;
-	
+}
+
+#left-top {
+
+	margin-right:	50%;
+	max-width:		15%;
+
+}
+
+#right_top {
+
+	float: 		right;
+	clear:		none;
+	margin-right:	20%;
+
 }
 
 blockquote, q {
 	quotes: none;
 }
+
 blockquote:before, blockquote:after,
 q:before, q:after {
 	content: '';
@@ -116,4 +134,9 @@ table {
 	width:		100%;
 	background-color:  white;
 	height:		200px;	
+}
+
+#ptime, .ptime  {
+
+
 }
