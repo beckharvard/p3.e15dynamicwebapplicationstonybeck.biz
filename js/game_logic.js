@@ -50,8 +50,7 @@ $(function() {
 
 				second_id = pictures_id;
 				second_shield = shield_clicked;
-
-		//		console.log("added second_id and second shield");  
+ 
 		//		consoleVariables();
 				
 				testformatch (last_picture_clicked);			
