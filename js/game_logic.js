@@ -8,10 +8,13 @@ $(function() {
 	var second_id = "";
 	var match = false;	
 	var speed = 1000;
+	var sentinel = false;
 	
 	var solvedpairs = new Array(); 
 
 	$('.container').click(function () {
+		// increment the click counter
+		updateClicks() 
 		// get the id of the shield that was clicked
 		var shield_clicked = $(this).find('.shield').attr('id');
 		//get the id of the div containing the picture
@@ -25,8 +28,8 @@ $(function() {
        // get the image for comparing 
 		var last_picture_clicked = $(this).find(".pictures").find("img").attr("src");
 		
-		console.log("A");  
-		consoleVariables();
+	//	console.log("A");  
+	//	consoleVariables();
 		
 		// first of a new round or first of a pair
 		if (prev_picture_clicked == "") {
@@ -36,9 +39,9 @@ $(function() {
 			first_shield = shield_clicked;			
 			match = false;
 			
-			console.log("B");  
-			consoleVariables();
-			console.log("returning");
+		//	console.log("B");  
+		//	consoleVariables();
+		//	console.log("returning");
 			return;
 		}
 	
@@ -48,8 +51,8 @@ $(function() {
 				second_id = pictures_id;
 				second_shield = shield_clicked;
 
-				console.log("added second_id and second shield");  
-				consoleVariables();
+		//		console.log("added second_id and second shield");  
+		//		consoleVariables();
 				
 				testformatch (last_picture_clicked);			
 		}	
@@ -63,7 +66,7 @@ $(function() {
 		
 				if ( prev_picture_clicked === last_picture_clicked && prev_picture_clicked !== "" && last_picture_clicked !== "" && first_shield === second_shield){
 				
-					consoleVariables();
+				//	consoleVariables();
 					
 					(
 						function (first_shield, second_shield) {
@@ -73,7 +76,7 @@ $(function() {
 					)
 					(first_shield, second_shield)
 					
-					alert(" dude, you just clicked that...now I have work to do clean that up.");
+					alert("Dude, you just clicked that twice in a row...now I have work to do clean that up!");
 					// reset the picture clicked variable 
 					resetVariables ();
 					consoleVariables();
@@ -83,30 +86,27 @@ $(function() {
 				else if ( prev_picture_clicked === last_picture_clicked && prev_picture_clicked !== "" && last_picture_clicked !== "") {
 					alert("A match!");
 			
-					console.log("Match");  
-					consoleVariables();
+			//		console.log("Match");  
+			//		consoleVariables();
 			
 					match = true;
 					$("#" + first_shield).css( "display", "none" );
 					$("#" + second_shield).css( "display", "none" );	
-			
-			
+						
 					solvedpairs.push( first_shield + " " + second_shield);
-					console.log(solvedpairs);
+			//		console.log(solvedpairs);
+					updateScore();
 			
-					//$("#" + first_shield).remove();
-					//$("#" + second_shield).remove();
-			
-					// reset the variables!
+				// reset the variables!
 					resetVariables ();
-					console.log("variables reset because we have a match." );
+				//	console.log("variables reset because we have a match." );
 					
 						if (solvedpairs.length == 10 ) {
 						 alert("Solved!");
 						}
 				}
 				if (!match) {
-					console.log("Evaluation NO Match", window, first_shield);  
+				//	console.log("Evaluation NO Match");  
 					match = false;
 					
 					// Asynchronous behavior needed: create a function with a new scope that holds on to these variable 
@@ -124,9 +124,9 @@ $(function() {
 					// reset the picture clicked variable 
 					
 					
-					console.log("variables will be reset because DON'T we have a match." );
+					//console.log("variables will be reset because DON'T we have a match." );
 					resetVariables();
-					consoleVariables();
+					//	consoleVariables();
 				}
 				
 
@@ -158,7 +158,7 @@ $(function() {
 	};
 	
 	function consoleVariables() {
-	
+		// use this for debugging
 
 		console.log("The variables are now....clicks "+ clicks + " " +
 				"prev_picture clicked "		+ prev_picture_clicked + " " +
@@ -170,19 +170,27 @@ $(function() {
 	
 	};
 	
-	$('.shield').click(function () {
-
+	function updateClicks() {
+	
 		clicks++;
 		var num = clicks / 2;
 		var tries = ~~num;	
 		$('#tries').replaceWith("<strong id=\"tries\" >" + tries + "</strong>");
+	};
+	
+	function updateScore() {
 		
 		
 		if (solvedpairs.length > 0) {
-			var matches = solvedpairs.length + 1;
+			var matches = solvedpairs.length;
 			$('#matches').replaceWith("<strong id=\"matches\" >" + matches + "</strong>");
+			console.log( "the length of the solved pairs array is: " + solvedpairs.length);
 		}
-	});
+		else {
+
+			$('#matches').replaceWith("<strong id=\"matches\" >0</strong>");
+		}
+	};
 	
 	$("#speed").change(function() {
 	
@@ -254,7 +262,7 @@ $(function() {
 		 //now add the images from the array to the page
 		 while (i < pairs.length) {
 		 //specifically to the divs of the class "pictures"
-		 	$('#' + (i+1)).html("<img src='images\\"+ pairs[i] + "' title=\"About\"/>");
+		 	$('#' + (i+1)).html("<img src='images\/"+ pairs[i] + "' title=\"About\"/>");
 		 //increment 	
 		 	i++;
 		 }			 
