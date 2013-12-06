@@ -2,6 +2,7 @@ $(function() {
 
 	var clicks = 0;
 	var prev_picture_clicked = "";
+	var last_container = "";
 	var first_shield = ""; 	
 	var second_shield = "";
 	var first_id = "";
@@ -10,10 +11,93 @@ $(function() {
 	var speed = 1000;
 	var sentinel = false;
 	var puzzleTime = '0.0';	
-	var solvedpairs = new Array(); 	
+	var solvedPairs = new Array(); 	
 	var completedContainers = new Array();
 	var start = new Date().getTime(),
 	elapsed = '0.0';
+
+/* ----------------------------------------------------------------------
+	The logic to setup the divs with a random matrix of images
+
+-------------------------------------------------------------------------*/
+
+	$(document).ready(function(){
+    
+	//alert("Document Ready!");	
+		var i = 0;
+	//create the array of pictures
+		var mypix = new Array();
+		
+	//  fill it with image file names
+		while (mypix.length < 10) {
+		
+	// set the min and max for the random assignment of values (image names are numeric)	
+			var min = 0;
+			var max = 9;
+	// and the formula is:
+			var random = Math.floor(Math.random() * (max - min + 1)) + min;
+	// see if the randomly chosen number is in the array
+			var redundant = mypix.indexOf("00" + random + ".jpg");
+	// if it's not
+			if (redundant === -1) {
+	// insert the jpeg filename into the array
+				mypix[i] = "00" + random + ".jpg";
+	// increment the loop
+				i++;
+			}
+		}
+
+	// reset our variable
+		i = 0;
+		
+	// generate an empty array to hole the pairs of images
+		var pairs = new Array();
+		
+	// start a loop 
+		while (i < 20 && pairs.length <= 20) {
+	// need random  
+			var min = 0;
+			var max = 9;
+	// and the formula is:
+			var random = Math.floor(Math.random() * (max - min + 1)) + min;
+	// set a variable to be the current item for insertion ingot the array	
+			var found = mypix[random];
+	// initially we won't find it in the array, but we need to check
+			var inpairs = pairs.indexOf(found);
+	// and we need to see if it's there more than once and will need to compare locations
+			var twiceinpairs =  pairs.lastIndexOf(found);	
+					
+			if ((inpairs !== twiceinpairs) &&  twiceinpairs !== -1) {
+
+	// don't do anything with it if it's already in the pairs array twice
+			}
+			else {
+	//add the it to the pairs array & increment
+				pairs[i] = found;
+				i++;
+			}
+	// the pairs array is completed when we move outside this array
+	// so we can then begin to place the images on the page	
+		}
+	// reset the variable
+		 i = 0;
+		 
+	//now add the images from the array to the page
+		 while (i < pairs.length) {
+	//specifically to the divs of the class "pictures"
+		 	$('#' + (i+1)).html("<img src='images\/"+ pairs[i] + "' title=\"About\"/>");
+	//increment 	
+		 	i++;
+		 }			 
+    });
+
+/* ----------------------------------------------------------------------
+	Game play - handles each click, checking for redundant clicks on the same container
+	clicks on the same pair. Stores clicked containers throughout the game, stores
+	shields in pairs, tests pairs for a match and when there is a match, they are added to
+	an array solvedPairs. If the pair does not match, we hide the images behind a shield.
+
+-------------------------------------------------------------------------*/
 
 
 	// we start with the container and check to see if the container is among the set of 
@@ -33,56 +117,53 @@ $(function() {
 	});
 	
 	function manageShields(container) {
-		// check if we even want to consider this a click
+	// check if we even want to consider this a click
 		
-		// increment the click counter
+	// increment the click counter
 		updateClicks();
-		// get the container id
+	// get the container id
 		var clicked_container = $(container).attr('id');
-		// get the id of the shield that was clicked
+	// get the id of the shield that was clicked
 		var shield_clicked = $(container).find('.shield').attr('id');
-		//get the id of the div containing the picture
+	//get the id of the div containing the picture
 		var pictures_id = $(container).find(".pictures").attr("id");
-		// display the picture by setting the shield display to none
+	// display the picture by setting the shield display to none
 		$("#" + shield_clicked).css( "display", "none" );
 		
-       // get the image for comparing 
+    // get the source of image for comparing 
 		var last_picture_clicked = $(container).find(".pictures").find("img").attr("src");
 		
-	//	console.log("A");  
-	//	consoleVariables();
-		
-		// first of a new round or first of a pair
+	// first of a new round or first of a pair we check if the variable is currently an empty string
 		if (prev_picture_clicked == "") {
-		
-			prev_picture_clicked = last_picture_clicked;			
-			first_id = pictures_id;		
-			first_shield = shield_clicked;			
+	// if it is we set the variable for the picture as the string for the image in the div that was clicked
+			prev_picture_clicked = last_picture_clicked;
+	// the last container variable needs to be set.		
+			last_container = clicked_container;
+	// set the id of the div to a variable (outside the score of this function because we'll need it later)			
+			first_id = pictures_id;
+	// set the id of the shield div to a variable (outside the score of this function because we'll need it later)		
+			first_shield = shield_clicked;		
+	// set the flag	
 			match = false;
-			
-		//	console.log("B");  
-		//	consoleVariables();
+	
 			return;
 		}
-	
+	// we will need to check if we have a second click of any pair
 		if (prev_picture_clicked != "" && second_id == "") {
-
-				second_id = pictures_id;
-				second_shield = shield_clicked;
-		// send to our method for checking hand handling matches and mismatches	
-				testformatch (clicked_container, last_picture_clicked);			
+	// if so we set variables as we did above for shield and picture
+			second_id = pictures_id;
+			second_shield = shield_clicked;
+	// send to our method for checking hand handling matches and mismatches	
+			testformatch (clicked_container, last_picture_clicked);			
 		}	
-
 	};
-	
-	function testformatch (container, last_picture_clicked) {
-		//if match variable is set to false set the shield back in place
-		
-		// if they have clicked on the same item twice
+	// this function determines what we will do with the the shields  	
+	function testformatch (container, last_picture_clicked) {		
+	// check if they have clicked on the same item twice
 		if ( prev_picture_clicked === last_picture_clicked && prev_picture_clicked !== "" && last_picture_clicked !== "" && first_shield === second_shield){
-		// both shields are the same and we need to reset the css
-		// Asynchronous behavior needed: create a function with a new scope that holds on to these variable 
-		// long enough to complete the setTimeout function. 	
+	// both shields are the same and we need to reset the css
+	// Asynchronous behavior needed: create a function with a new scope that holds on to these variable 
+	// long enough to complete the setTimeout function. 	
 			(
 				function (first_shield, second_shield) {
 				setTimeout(function(){$("#" + first_shield).css( "display", "inline" )},speed);	
@@ -90,49 +171,46 @@ $(function() {
 				}
 			)
 			(first_shield, second_shield)
-		// the user is penalized by having to dismiss the dialog.	
-			alert("Dude, you just clicked that twice in a row...now I have work to do clean that up!");
-		// reset the picture clicked variable 
+	// the user is penalized by having to dismiss the dialog.	
+			alert("Clicking the same square won't help!");
+	// reset the picture clicked variable 
 			resetVariables ();
-			consoleVariables();
-			
+			consoleVariables();			
 		}
 		
 		else if ( prev_picture_clicked === last_picture_clicked && prev_picture_clicked !== "" && last_picture_clicked !== "") {
-		//alert("A match!");
-
-			$('#matched').replaceWith("<h4 id=\"matched\" >Matched</h4>");
-		//set this variable 			
+		//console.log("A match!");
+			
+	//set this variable 			
 			match = true;
-		//	change the css on the variables so that the image remains displayed
+	//	change the css on the variables so that the image remains displayed
 			$("#" + first_shield).css( "display", "none" );
 			$("#" + second_shield).css( "display", "none" );	
-		// 	put these shields into the array		
-			solvedpairs.push( first_shield + " " + second_shield);
-		//	call the method to update the score
+	// 	put these shields into the array		
+			solvedPairs.push( first_shield + " " + second_shield);
+	//	call the method to update the score
 			updateScore();		
-		// 	and reset the variables!
+	// 	and reset the variables!
 			resetVariables ();
-			
-			console.log("this pushed " + container);
+	// add the containers to the ones that will be ignored when clicked
+			completedContainers.push(last_container);
 			completedContainers.push(container);
-			console.log(completedContainers);
+	//		console.log(completedContainers);
 			
-		//	once there are ten pairs in the array, we know we are done!	
-			if (solvedpairs.length == 10 ) {
+	//	once there are ten pairs in the array, we know we are done!	
+			if (solvedPairs.length == 10 ) {
 			 sentinel = false;
 			 alert("Solved!");
 			}
 		}
 
 		if (!match) {
-		//	console.log("Evaluation NO Match");  
+	//	console.log("Evaluation NO Match");  
 			match = false;
-			$('#matched').replaceWith("<h4 id=\"matched\" >Nope!</h4>");
 			
-		// As above: Asynchronous behavior needed: create a function with a new 
-		// scope that holds on to these variable 
-		// long enough to complete the setTimeout function. 
+	// As above: Asynchronous behavior needed: create a function with a new 
+	// scope that holds on to these variable 
+	// long enough to complete the setTimeout function. 
 			(
 				function(first_shield, second_shield) {
 					setTimeout(function(){$("#" + first_shield).css( "display", "inline" )},speed);	
@@ -141,14 +219,14 @@ $(function() {
 			)
 			(first_shield, second_shield)
 			
-			//variables will be reset because DON'T we have a match
+		//variables will be reset because DON'T we have a match
 			resetVariables();
 		}
 	};
 	
 	function resetVariables () {
 	
-		console.log("Shown before we clear those variables...");
+	//	console.log("Shown before we clear those variables...");
 		consoleVariables();
 
 		prev_picture_clicked = "";
@@ -164,13 +242,12 @@ $(function() {
 			"second shield " 					+ second_shield + " " +
 			"first id "							+ first_id + " " +
 			"second id "						+ second_id + " " +
-			"match " 							+  match);
-	
+			"match " 							+  match +
+			"last container "					+ last_container);
 	};
 	
+	// use this for debugging - uncomment it 
 	function consoleVariables() {
-		// use this for debugging
-
 	/*	console.log("The variables are now...clicks" 	+ clicks + " " +
 			"prev_picture clicked "						+ prev_picture_clicked + " " +
 			"first shield " 							+ first_shield + " " +
@@ -178,18 +255,16 @@ $(function() {
 			"first id "									+ first_id + " " +
 			"second id "								+ second_id + " " +
 			"match " 									+  match);
-				
+		console.log( "the length of the solved pairs array is: " + solvedPairs.length);		
 	*/
-	//	console.log( "the length of the solved pairs array is: " + solvedpairs.length);
+
 	};
 	
-	// still need a function to disable clicking for the matched items once each has been revealed
-	
-	function checkCompletedContainers(foo) {
-	
-		console.log("foo is" +foo);
-		var index = completedContainers.indexOf(foo);
-		console.log("completed containers is " + completedContainers);
+	// function to disable clicking for the matched items once each has been revealed	
+	function checkCompletedContainers(container_clicked) {
+	// set a variable to be the index of locations where the container was found in the array
+		var index = completedContainers.indexOf(container_clicked);
+	//	console.log("completed containers is " + completedContainers);
 		
 		if (index > -1) {
 			return false;
@@ -199,6 +274,7 @@ $(function() {
 		}
 	};
 	
+	// updating the click counter
 	function updateClicks() {
 	
 		clicks++;
@@ -210,11 +286,11 @@ $(function() {
 			sentinel = true;			
 		}
 	};
-	
+	// updating the score of matches
 	function updateScore() {
 		
-		if (solvedpairs.length > 0) {
-			var matches = solvedpairs.length;
+		if (solvedPairs.length > 0) {
+			var matches = solvedPairs.length;
 			$('#matches').replaceWith("<strong id=\"matches\" >" + matches + "</strong>");
 		
 		}
@@ -224,109 +300,40 @@ $(function() {
 		}
 		
 	};
-	
+	// updating the speed value for how long the images are displayed
 	$("#speed").change(function() {
 	
 		speed = $(this).val();
 	
 	});
-
+	
+	// setting the interval for the timer
 	setInterval(function() {
-		
+	// once we have a click, the sentinel has been set and we begin timing
 		if (sentinel) {
+	// in this case -start is necessary to get a meaningful number
 		var time = new Date().getTime() - start;
-
+	//  variable elapsed and the divisors
 		elapsed = Math.floor(time / 100) / 10;
+	// keeping the time within tenths of seconds
 		if(Math.round(elapsed) == elapsed) { elapsed += '.0'; }
-
+	// setting the scoped var
 		puzzleTime = elapsed;
+	// writing it to the page 
 		$('#ptime').replaceWith("<strong id=\"ptime\" >" + puzzleTime + "</strong>");
 		}
 	}, 100);
 	
+	// a button for a new game
 	$('#restart').click(function () {
 	
 		location.reload();
 	});
-
-/* ----------------------------------------------------------------------
-	The logic to setup the divs with a random matrix of images
-
--------------------------------------------------------------------------*/
-
-	$(document).ready(function(){
-    
-		//alert("Document Ready!");	
-		var i = 0;
-		
-		var mypix = new Array();
-		
-		// create an array and fill it with image file names
-		while (mypix.length < 10) {
-		
-		// set the min and max for the random assignment of values (image names are numeric)	
-			var min = 0;
-			var max = 9;
-		// and the formula is:
-			var random = Math.floor(Math.random() * (max - min + 1)) + min;
-		// see if the randomly chosen number is in the array
-			var redundant = mypix.indexOf("00" + random + ".jpg");
-		// if it's not
-			if (redundant === -1) {
-		// insert the jpeg filename into the array
-				mypix[i] = "00" + random + ".jpg";
-		// increment the loop
-				i++;
-			}
-		}
-
-		// reset our variable
-		i = 0;
-		
-		// generate an empty array to hole the pairs of images
-		var pairs = new Array();
-		
-		// start a loop 
-		while (i < 20 && pairs.length <= 20) {
-		// need random  
-			var min = 0;
-			var max = 9;
-		// and the formula is:
-			var random = Math.floor(Math.random() * (max - min + 1)) + min;
-		// set a variable to be the current item for insertion ingot the array	
-			var found = mypix[random];
-		// initially we won't find it in the array, but we need to check
-			var inpairs = pairs.indexOf(found);
-		// and we need to see if it's there more than once and will need to compare locations
-			var twiceinpairs =  pairs.lastIndexOf(found);	
-					
-			if ((inpairs !== twiceinpairs) &&  twiceinpairs !== -1) {
-
-		// don't do anything with it if it's already in the pairs array twice
-			}
-			else {
-		//add the it to the pairs array & increment
-				pairs[i] = found;
-				i++;
-			}
-		// the pairs array is completed when we move outside this array
-		// so we can then begin to place the images on the page	
-		}
-		// reset the variable
-		 i = 0;
-		 
-		 //now add the images from the array to the page
-		 while (i < pairs.length) {
-		 //specifically to the divs of the class "pictures"
-		 	$('#' + (i+1)).html("<img src='images\/"+ pairs[i] + "' title=\"About\"/>");
-		 //increment 	
-		 	i++;
-		 }			 
-    });
     
     $(window).load(function () {
 
 		// alert("Window Loaded!");	
+		// who knows, maybe I'll use this if I extend this game somehow.
 		
 	});
 	
