@@ -16,127 +16,136 @@ article, aside, canvas, details, embed,
 figure, figcaption, footer, header, hgroup, 
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
-	margin: 0;
-
-	padding: 0;
-	border: 0;
-	font-size: 100%;
-	font: inherit;
-	vertical-align: baseline;
+	margin: 			0;
+	padding: 			0;
+	border: 			0;
+	font-size: 			100%;
+	font: 				inherit;
+	vertical-align: 	baseline;
 }
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, 
 header, hgroup, menu, nav, section {
-	display: block;
+	display: 			block;
 }
 body {
-	line-height: 1;
+	line-height: 		1;
 }
 ol, ul {
-	list-style: none;
+	list-style: 		none;
 }
 
 h1, h2, footer{
-	padding:	25px;
-	margin:		25px;
+	padding:			25px;
+	margin:				25px;
 }
 
 p, h4, select, fieldset  {
 
-	margin-left:	50px;
+	margin-left:		50px;
 }
 
 p {
-	max-width:		80%;
+	width:				1000px;
 }
 
 #left-top {
 
-	margin-right:	50%;
-	max-width:		15%;
+	margin-right:		50%;
+	max-width:			15%;
 
 }
 
 #right_top {
 
-	float: 		right;
-	clear:		none;
-	margin-right:	20%;
+	float: 				right;
+	clear:				none;
+	margin-right:		20%;
 
 }
 
+#matched {
+	color:				red;
+	float: 				right;
+}
+button {
+	float: 				right;
+}
+
 blockquote, q {
-	quotes: none;
+	quotes: 			none;
 }
 
 blockquote:before, blockquote:after,
 q:before, q:after {
-	content: '';
-	content: none;
+	content: 			'';
+	content: 			none;
 }
 table {
-	border-collapse: collapse;
-	border-spacing: 0;
+	border-collapse:	 collapse;
+	border-spacing: 	0;
 }
 
 .pictures, .shield, .shield2  {
-	width: 100%;
-    height: 100%;
-	border:	2px;
-	border-color:	red;
-	float:			left;
-	margin-right:	0%;
+	width: 				100%;
+    height: 			100%;
+	border:				2px;
+	border-color:		red;
+	float:				left;
+	margin-right:		0%;
 	
-	position:	relative; */
-	top: 0;
-    left: 0;
+	position:			relative; 
+	top: 				0;
+    left: 				0;
 }
 
 .shield {
-	border:		1px solid black;
+	border:				1px solid black;
 
 }
 
 .shield, shield2 {
 
-	z-index: 10;
+	z-index: 			10;
 }
 
 .pictures {
 
-/*	display:	none;  */
+/*	display:			none;  */
 }
 
 #wrapper {
-	margin:		50px;
-	width:		1000px;
-	height:		800px
-	border:		1px solid black;
+	margin:				50px;
+	width:				1000px;
+	height:				800px
+	border:				1px solid black;
 }
 
 .shield, shield2 {
-	z-index:		10;
-	float:			left;
+	z-index:			10;
+	float:				left;
 }
 
 
 
 .container{
-    width: 200px;
-    height: 150px;
-    position: relative; 
-    float:			left;
+    width: 				200px;
+    height: 			150px;
+    position: 			relative; 
+    float:				left;
     
 }
 
 #hider1 {
 
-	width:		100%;
-	background-color:  white;
-	height:		200px;	
+	width:				100%;
+	background-color:  	white;
+	height:				200px;	
 }
 
 #ptime, .ptime  {
 
 
 }
+
+ 
